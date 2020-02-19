@@ -1,0 +1,170 @@
+\documentclass[12pt]{article}
+
+\usepackage{graphicx}
+\usepackage{paralist}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{hhline}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage{url}
+
+\oddsidemargin -10mm
+\evensidemargin -10mm
+\textwidth 160mm
+\textheight 200mm
+\renewcommand\baselinestretch{1.0}
+
+\pagestyle {plain}
+\pagenumbering{arabic}
+
+\newcounter{stepnum}
+
+%% Comments
+
+\usepackage{color}
+
+\newif\ifcomments\commentstrue
+
+\ifcomments
+\newcommand{\authornote}[3]{\textcolor{#1}{[#3 ---#2]}}
+\newcommand{\todo}[1]{\textcolor{red}{[TODO: #1]}}
+\else
+\newcommand{\authornote}[3]{}
+\newcommand{\todo}[1]{}
+\fi
+
+\newcommand{\wss}[1]{\authornote{blue}{SS}{#1}}
+
+\title{Assignment 4 Specification}
+\author{Di Wu, 400117248, wud43}
+
+\begin {document}
+
+\maketitle
+This Module Interface Specification (MIS) document contains modules, types and
+methods for implementing the state of a game of Forty Thieves solitaire.
+
+\wss{The parts that you need to fill in are marked by comments, like this one.
+  In several of the modules local functions are specified.  You can use these
+  local functions to complete the missing specifications.}
+
+\wss{As you edit the tex source, please leave the \texttt{wss} comments in the
+  file.  Put your answer \textbf{before} the comment.  This will make grading
+  easier.}
+
+\newpage
+
+\section* {Board Module}
+
+\subsection* {Generic Template Module}
+
+Stack
+
+\subsection* {Uses}
+
+N/A
+
+\subsection* {Syntax}
+
+\subsubsection* {Exported Types}
+
+Board = ?
+
+\subsubsection* {Exported Constants}
+
+None
+
+\subsubsection* {Exported Access Programs}
+
+\begin{tabular}{| l | l | l | p{5cm} |}
+\hline
+\textbf{Routine name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions}\\
+\hline
+Board & Integer & Board & none\\
+\hline
+set & $\mathbb{N}$,$\mathbb{N}$ &  & none\\
+\hline
+PrintBoard & &  & none\\
+\hline
+NextStage & &  & none\\
+\hline
+CountNeigh & seq of (seq of $\mathbb{N}$) ,$\mathbb{N}$ ,$\mathbb{N}$ & $\mathbb{N}$ & none\\
+\hline
+toVec& & seq of (seq of $\mathbb{N}$) & none\\
+\hline
+\end{tabular}
+
+\subsection* {Semantics}
+
+\subsubsection* {State Variables}
+
+None
+
+\subsubsection* {State Invariant}
+
+None
+
+\subsubsection* {Assumptions \& Design Decisions}
+
+\begin{itemize}
+\item The Board constructor is called for each object instance before any
+  other access routine is called for that object.  The constructor can only be
+  called once.
+\end{itemize}
+
+\subsubsection* {Access Routine Semantics}
+
+Stack($num$):
+\begin{itemize}
+\item transition: $S := BoardState[num][num]$
+
+\item output: $\mathit{out} := \mathit{self}$
+\item exception: none
+\end{itemize}
+
+\noindent set($a,b$):
+\begin{itemize}
+\item transition: $S[a][b] := 1$
+\item exception: none
+\end{itemize}
+
+\noindent PrintBoard():
+\begin{itemize}
+\item exception: none
+\end{itemize}
+
+\noindent NextStage():
+\begin{itemize}
+\item transition: $(i,j \in [0...BoardState.size()] | (CountNeigh(BoardState,i,j) == 3 \and BoardState[i][j] == 0) \implies BoardState[i][j] = 1, (\not (CountNeigh(BoardState,i,j) == 3) \and BoardState[i][j] == 1) \implies BoardState[i][j] = 0)$
+
+\item exception: none
+
+\end{itemize}
+
+\noindent CountNeigh(s,a,b):
+\begin{itemize}
+\item $out := (+1 | i \in [a-1 ... a+1] \and j \in [b-1 ... b+1] \and \not(i == a) \and \not (j == b) \and BoardState[i][j] == 1)$
+\item exception: None
+\end{itemize}
+
+\noindent toVec():
+\begin{itemize}
+\item output: $\mathit{out} := BoardState$
+\item exception: None
+
+\end{itemize}
+
+\newpage
+
+\section*{Critique of Design}
+
+\wss{Write a critique of the interface for the modules in this project.  Is there
+anything missing?  Is there anything you would consider changing?  Why?}\\
+
+Firstly, I believe that I created a function called toVec() in the BoardADT. My initial thoughts is that it will be convenient for achieving the other goals of other functions.
+But it violates the information hiding policy. Secondly, in the Board constructor, I used a number as the input to create a num *num board. That is a little bit complex. 
+Instead of doing it, I believe that I can directly use the content from the file-reading and build the BoardADT directly.
+
+\end {document}
